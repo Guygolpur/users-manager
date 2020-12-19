@@ -37,6 +37,9 @@ const styles = StyleSheet.create({
 });
 
 class UpdateUser extends Component {
+  constructor(props) {
+    super(props);
+  }
   static navigationOptions = {
     tabBarIcon: ({tintColor}) => (
       <Icon name={'plus'} size={50} color={tintColor} />

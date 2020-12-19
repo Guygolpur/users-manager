@@ -27,6 +27,7 @@ class UsersList extends Component {
     if (this.props.detailView === true) {
       return <UsersDetail />;
     } else {
+      this.props.loadInitialContacts(this.props.jwt);
       return (
         <FlatList
           data={this.props.users}
@@ -45,7 +46,7 @@ const mapStateToProps = (state) => {
   return {
     users: state.users,
     detailView: state.detailView,
-    jwt: state.jwt
+    jwt: state.jwt,
   };
 };
 
