@@ -24,6 +24,7 @@ export const createNewContact = ({
   phone,
   email,
   company,
+  jwt,
 }) => {
   return (dispatch) => {
     var details = {
@@ -41,10 +42,11 @@ export const createNewContact = ({
     }
     formBody = formBody.join('&');
 
-    fetch('https://users-manager-server.herokuapp.com/api/users-list', {
+    fetch('https://users-manager-server.herokuapp.com/api/users/users-list', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        token: jwt,
       },
       body: formBody,
     })
@@ -56,9 +58,14 @@ export const createNewContact = ({
   };
 };
 
-export const loadInitialContacts = () => {
+export const loadInitialContacts = (jwt) => {
   return (dispatch) => {
-    fetch('https://users-manager-server.herokuapp.com/api/users-list')
+    fetch('https://users-manager-server.herokuapp.com/api/users/users-list', {
+      method: 'GET',
+      headers: {
+        token: jwt,
+      },
+    })
       .then((response) => {
         return response.json();
       })
@@ -69,13 +76,22 @@ export const loadInitialContacts = () => {
   };
 };
 
-export const deleteContact = (id) => {
+export const deleteContact = (id, jwt) => {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      token: jwt,
+    },
+  };
   return (dispatch) => {
-    fetch(`https://users-manager-server.herokuapp.com/api/users-list/${id}`, {
-      method: 'DELETE',
-    }).then(() => {
-      dispatch({type: 'DELETE_CONTACT'});
-    });
+    fetch(
+      `https://users-manager-server.herokuapp.com/api/users/users-list/${id}`,
+      requestOptions,
+    )
+      .then(() => {
+        dispatch({type: 'DELETE_CONTACT'});
+      })
+      .catch((error) => console.log(error));
   };
 };
 
@@ -93,6 +109,7 @@ export const saveContact = ({
   email,
   company,
   _id,
+  jwt,
 }) => {
   return (dispatch) => {
     var details = {
@@ -109,17 +126,33 @@ export const saveContact = ({
       formBody.push(encodedKey + '=' + encodedValue);
     }
     formBody = formBody.join('&');
-    fetch(`https://users-manager-server.herokuapp.com/api/users-list/${_id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    fetch(
+      `https://users-manager-server.herokuapp.com/api/users/users-list/${_id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          token: jwt,
+        },
+        body: formBody,
       },
-      body: formBody,
-    })
+    )
       .then((response) => console.log(response))
       .then(() => {
         dispatch({type: 'SAVE_CONTACT'});
       })
       .catch((error) => console.log(error));
+  };
+};
+
+export const jwtHandler = (jwt) => {
+  return (dispatch) => {
+    dispatch({type: 'SAVE_JWT', jwt: jwt});
+  };
+};
+
+export const signInOrUp = (isAccountExists) => {
+  return (dispatch) => {
+    dispatch({type: 'SIGN_IN_OR_UP', isAccountExists: isAccountExists});
   };
 };

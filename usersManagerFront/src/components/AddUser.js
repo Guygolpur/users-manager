@@ -34,10 +34,9 @@ class AddUser extends Component {
   };
 
   onAddPress() {
-    console.log('button clicked');
-    const {firstName, lastName, phone, email, company} = this.props;
+    const {firstName, lastName, phone, email, company, jwt} = this.props;
 
-    this.props.createNewContact({firstName, lastName, phone, email, company});
+    this.props.createNewContact({firstName, lastName, phone, email, company, jwt});
 
     this.props.navigation.navigate('Users');
   }
@@ -115,8 +114,8 @@ class AddUser extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const {firstName, lastName, phone, email, company, project, notes} = state;
-  return {firstName, lastName, phone, email, company, project, notes};
+  const {firstName, lastName, phone, email, company, project, notes, jwt} = state;
+  return {firstName, lastName, phone, email, company, project, notes, jwt};
 };
 
 export default connect(mapStateToProps, actions)(AddUser);

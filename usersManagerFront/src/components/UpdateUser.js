@@ -44,9 +44,9 @@ class UpdateUser extends Component {
   };
 
   onUpdatePress() {
-    const {firstName, lastName, phone, email, company, _id} = this.props;
+    const {firstName, lastName, phone, email, company, _id, jwt} = this.props;
 
-    this.props.saveContact({firstName, lastName, phone, email, company, _id});
+    this.props.saveContact({firstName, lastName, phone, email, company, _id, jwt});
   }
 
   render() {
@@ -137,8 +137,9 @@ const mapStateToProps = (state) => {
     project,
     notes,
     _id,
+    jwt
   } = state;
-  return {firstName, lastName, phone, email, company, project, notes, _id};
+  return {firstName, lastName, phone, email, company, project, notes, _id, jwt};
 };
 
 export default connect(mapStateToProps, actions)(UpdateUser);

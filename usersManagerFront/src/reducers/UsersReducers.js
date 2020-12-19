@@ -9,6 +9,7 @@ const initialState = {
   company: '',
   _id: '',
   toUpdate: false,
+  jwt: '',
 };
 
 export default (state = initialState, action) => {
@@ -31,6 +32,7 @@ export default (state = initialState, action) => {
         ...state,
         detailView: false,
         userSelected: null,
+        toUpdate: false,
       };
 
     case 'FORM_UPDATE':
@@ -67,6 +69,12 @@ export default (state = initialState, action) => {
         _id: action.payload._id,
       };
 
+    case 'SAVE_JWT':
+      return {
+        ...state,
+        jwt: action.jwt,
+      };
+
     case 'SAVE_CONTACT':
       return {
         ...state,
@@ -85,6 +93,12 @@ export default (state = initialState, action) => {
         ...state,
         detailView: false,
         userSelected: null,
+      };
+
+    case 'SIGN_IN_OR_UP':
+      return {
+        ...state,
+        isAccountExists: action.isAccountExists,
       };
 
     default:

@@ -159,7 +159,10 @@ class DetailView extends Component {
               <TouchableOpacity
                 style={styles.sections}
                 onPress={() => {
-                  this.props.deleteContact(this.props.userSelected._id);
+                  this.props.deleteContact(
+                    this.props.userSelected._id,
+                    this.props.jwt,
+                  );
                 }}>
                 <MaterialCommunityIcons
                   name={'delete-forever'}
@@ -180,6 +183,7 @@ const mapStateToProps = (state) => {
   return {
     userSelected: state.userSelected,
     toUpdate: state.toUpdate,
+    jwt: state.jwt,
   };
 };
 

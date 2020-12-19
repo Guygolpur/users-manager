@@ -20,7 +20,7 @@ class UsersList extends Component {
   };
 
   UNSAFE_componentWillMount() {
-    this.props.loadInitialContacts();
+    this.props.loadInitialContacts(this.props.jwt);
   }
 
   renderInitialView() {
@@ -45,6 +45,7 @@ const mapStateToProps = (state) => {
   return {
     users: state.users,
     detailView: state.detailView,
+    jwt: state.jwt
   };
 };
 
