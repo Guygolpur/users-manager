@@ -86,7 +86,7 @@ class SignUp extends Component {
         rePassword.length > 0
       ) {
         var details = {
-          email: email,
+          email: email.toLowerCase(),
           password: password,
         };
         var formBody = [];

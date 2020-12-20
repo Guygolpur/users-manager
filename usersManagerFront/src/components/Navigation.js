@@ -44,5 +44,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {jwtHandler})(Navigation);
-
-// export default Navigation;

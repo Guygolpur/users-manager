@@ -81,7 +81,7 @@ class SignIn extends Component {
     let isEmailValid = this.checkEmailValidation();
     if (isEmailValid) {
       var details = {
-        email: email,
+        email: email.toLowerCase(),
         password: password,
       };
       var formBody = [];
