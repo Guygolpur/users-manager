@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
-import {Text, Button, View, StyleSheet} from 'react-native';
-import {TextInput} from 'react-native-paper';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Text, Button, View, StyleSheet } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { TextInput } from 'react-native-paper';
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 
-import {jwtHandler, signInOrUp} from '../actions';
+import { jwtHandler, signInOrUp } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,9 +51,11 @@ const styles = StyleSheet.create({
   validationPopupButton: {
     paddingTop: 30,
   },
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
 });
 
-var statusOk = true;
 var validationMessage = '';
 
 class SignIn extends Component {
@@ -64,6 +67,7 @@ class SignIn extends Component {
       password: '',
       jwt: '',
       isPopupVisible: false,
+      spinner: false,
     };
   }
 
@@ -77,9 +81,10 @@ class SignIn extends Component {
   };
 
   onLogin() {
-    const {email, password} = this.state;
+    const { email, password } = this.state;
     let isEmailValid = this.checkEmailValidation();
     if (isEmailValid) {
+      this.setState({spinner: !this.state.spinner})
       var details = {
         email: email.toLowerCase(),
         password: password,
@@ -108,11 +113,13 @@ class SignIn extends Component {
         .then((data) => {
           this.setState({
             jwt: data.token,
+            spinner: !this.state.spinner
           });
           this.props.jwtHandler(data.token);
         })
         .catch((error) => {
           error.json().then((message) => {
+            this.setState({spinner: !this.state.spinner})
             validationMessage = message.message;
             this.togglePopup();
           });
@@ -128,7 +135,7 @@ class SignIn extends Component {
   }
 
   togglePopup = () => {
-    this.setState({isPopupVisible: !this.state.isPopupVisible});
+    this.setState({ isPopupVisible: !this.state.isPopupVisible });
   };
 
   render() {
@@ -145,35 +152,39 @@ class SignIn extends Component {
             </View>
           </View>
         </Modal>
+        <Spinner 
+          visible={this.state.spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}/>
         <View style={styles.inputContainer}>
           <TextInput
             value={this.state.email}
-            onChangeText={(email) => this.setState({email})}
+            onChangeText={(email) => this.setState({ email })}
             label="Email"
             style={styles.input}
           />
           <TextInput
             value={this.state.password}
-            onChangeText={(password) => this.setState({password})}
+            onChangeText={(password) => this.setState({ password })}
             label="Password"
             secureTextEntry={true}
             style={styles.input}
           />
           <Button
-            buttonStyle={{width: 150}}
-            containerStyle={{margin: 5}}
+            buttonStyle={{ width: 150 }}
+            containerStyle={{ margin: 5 }}
             disabledStyle={{
               borderWidth: 2,
               borderColor: '#00F',
             }}
-            disabledTitleStyle={{color: '#00F'}}
+            disabledTitleStyle={{ color: '#00F' }}
             linearGradientProps={null}
-            iconContainerStyle={{background: '#000'}}
-            loadingProps={{animating: true}}
+            iconContainerStyle={{ background: '#000' }}
+            loadingProps={{ animating: true }}
             loadingStyle={{}}
             onPress={this.onLogin.bind(this)}
             title="Login"
-            titleStyle={{marginHorizontal: 5}}
+            titleStyle={{ marginHorizontal: 5 }}
           />
           <View style={styles.registrationWrapper}>
             <Text style={styles.registrationTitle}>Dont have an account?</Text>
@@ -196,4 +207,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {jwtHandler, signInOrUp})(SignIn);
+export default connect(mapStateToProps, { jwtHandler, signInOrUp })(SignIn);

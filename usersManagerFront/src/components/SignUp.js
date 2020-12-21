@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Text, Button, View, StyleSheet} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {TextInput} from 'react-native-paper';
 import {connect} from 'react-redux';
 import {signInOrUp, jwtHandler} from '../actions';
@@ -48,6 +49,9 @@ const styles = StyleSheet.create({
   validationPopupButton: {
     paddingTop: 30,
   },
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
 });
 var validationMessage = '';
 
@@ -85,6 +89,7 @@ class SignUp extends Component {
         password.length > 0 &&
         rePassword.length > 0
       ) {
+        this.setState({spinner: !this.state.spinner})
         var details = {
           email: email.toLowerCase(),
           password: password,
@@ -113,12 +118,14 @@ class SignUp extends Component {
           .then((data) => {
             this.setState({
               jwt: data.token,
+              spinner: !this.state.spinner,
             });
             this.props.jwtHandler(data.token);
             this.props.signInOrUp(false);
           })
           .catch((error) => {
             error.json().then((message) => {
+              this.setState({spinner: !this.state.spinner})
               validationMessage = message.msg;
               this.togglePopup();
             });
@@ -156,6 +163,10 @@ class SignUp extends Component {
               </View>
             </View>
           </Modal>
+          <Spinner 
+            visible={this.state.spinner}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}/>
           <View style={styles.container}>
             <TextInput
               value={this.state.email}
